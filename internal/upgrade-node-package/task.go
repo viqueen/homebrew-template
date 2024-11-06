@@ -5,5 +5,13 @@ func Task(info PackageInfo) error {
 	if err != nil {
 		return err
 	}
-	return downloadLatestArtifact(distro)
+	err = downloadLatestArtifact(distro)
+	if err != nil {
+		return err
+	}
+	err = runChecksum(distro)
+	if err != nil {
+		return err
+	}
+	return nil
 }
