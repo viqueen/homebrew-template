@@ -9,7 +9,7 @@ func Task(info PackageInfo) error {
 	if err != nil {
 		return err
 	}
-	err = runChecksum(distro)
+	err = upgradeTapFormula(distro)
 	if err != nil {
 		return err
 	}

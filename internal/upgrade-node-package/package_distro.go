@@ -6,19 +6,19 @@ import (
 	"os/exec"
 )
 
-type PackageSignature struct {
+type packageSignature struct {
 	KeyId     string `json:"keyid"`
 	Signature string `json:"sig"`
 }
 
-type PackageDistro struct {
+type packageDistro struct {
 	Name         string             `json:"name"`
 	Integrity    string             `json:"integrity"`
 	ShaSum       string             `json:"shasum"`
 	TarBall      string             `json:"tarball"`
 	FileCount    int                `json:"fileCount"`
 	UnpackedSize int                `json:"unpackedSize"`
-	Signatures   []PackageSignature `json:"signatures"`
+	Signatures   []packageSignature `json:"signatures"`
 }
 
 type PackageInfo struct {
@@ -26,13 +26,13 @@ type PackageInfo struct {
 	Name string
 }
 
-func loadPackageDistro(info PackageInfo) (*PackageDistro, error) {
+func loadPackageDistro(info PackageInfo) (*packageDistro, error) {
 	cmd := exec.Command("npm", "show", fmt.Sprintf("%s/%s", info.Org, info.Name), "dist", "--json")
 	output, err := cmd.Output()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get package distro: %w", err)
 	}
-	var distro PackageDistro
+	var distro packageDistro
 	if err = json.Unmarshal(output, &distro); err != nil {
 		return nil, fmt.Errorf("failed to unmarshal package distro: %w", err)
 	}

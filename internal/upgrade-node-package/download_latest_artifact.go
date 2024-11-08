@@ -9,7 +9,7 @@ import (
 	"path/filepath"
 )
 
-func downloadLatestArtifact(distro *PackageDistro) error {
+func downloadLatestArtifact(distro *packageDistro) error {
 	cwd, err := os.Getwd()
 	if err != nil {
 		return fmt.Errorf("failed to get current working directory: %w", err)

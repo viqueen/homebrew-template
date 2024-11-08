@@ -10,3 +10,7 @@ Template for managing homebrew taps
 - Golang
 
 ---
+
+### usage
+
+`./cli.sh upgrade-node-package <org> <name>`
