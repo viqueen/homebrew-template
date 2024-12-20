@@ -16,13 +16,13 @@ type artifactHashes struct {
 	Sha256 string
 }
 
-func getArtifactHashes() (*artifactHashes, error) {
+func getArtifactHashes(distro *packageDistro) (*artifactHashes, error) {
 	cwd, err := os.Getwd()
 	if err != nil {
 		return nil, fmt.Errorf("failed to get current working directory: %w", err)
 	}
 
-	artifactPath := filepath.Join(cwd, "build", "artifact.tgz")
+	artifactPath := filepath.Join(cwd, "build", distro.Name, "artifact.tgz")
 
 	file, err := os.Open(artifactPath)
 	if err != nil {
@@ -36,8 +36,12 @@ func getArtifactHashes() (*artifactHashes, error) {
 	}
 	sha1Checksum := hex.EncodeToString(sha1Hash.Sum(nil))
 
+	if _, err = file.Seek(0, io.SeekStart); err != nil {
+		return nil, fmt.Errorf("failed to seek to beginning of file: %w", err)
+	}
+
 	sha256Hash := sha256.New()
-	if _, err = io.Copy(sha1Hash, file); err != nil {
+	if _, err = io.Copy(sha256Hash, file); err != nil {
 		return nil, fmt.Errorf("failed to calculate checksum: %w", err)
 	}
 	sha256Checksum := hex.EncodeToString(sha256Hash.Sum(nil))

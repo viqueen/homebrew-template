@@ -26,7 +26,7 @@ type PackageInfo struct {
 	Name string
 }
 
-func loadPackageDistro(info PackageInfo) (*packageDistro, error) {
+func getPackageDistro(info PackageInfo) (*packageDistro, error) {
 	cmd := exec.Command("npm", "show", fmt.Sprintf("%s/%s", info.Org, info.Name), "dist", "--json")
 	output, err := cmd.Output()
 	if err != nil {

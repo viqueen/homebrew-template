@@ -14,7 +14,7 @@ func downloadLatestArtifact(distro *packageDistro) error {
 	if err != nil {
 		return fmt.Errorf("failed to get current working directory: %w", err)
 	}
-	buildPath := filepath.Join(cwd, "build")
+	buildPath := filepath.Join(cwd, "build", distro.Name)
 	if err = os.MkdirAll(buildPath, os.ModePerm); err != nil {
 		return fmt.Errorf("failed to create build directory: %w", err)
 	}

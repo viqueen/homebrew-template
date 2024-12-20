@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"fmt"
+	"log"
 	"os"
 	"path/filepath"
 	"text/template"
@@ -26,7 +27,8 @@ type templateParams struct {
 }
 
 func upgradeTapFormula(distro *packageDistro) error {
-	hashes, err := getArtifactHashes()
+	hashes, err := getArtifactHashes(distro)
+	log.Printf("Hashes: %v", hashes)
 	if err != nil {
 		return fmt.Errorf("failed to get artifact hashes: %w", err)
 	}
@@ -47,8 +49,8 @@ func upgradeTapFormula(distro *packageDistro) error {
 		return fmt.Errorf("failed to read formula distro file: %w", err)
 	}
 
-	var formulaInfo formulaInfo
-	if err = json.Unmarshal(formulaInfoContent, &formulaInfo); err != nil {
+	var info formulaInfo
+	if err = json.Unmarshal(formulaInfoContent, &info); err != nil {
 		return fmt.Errorf("failed to parse formula distro JSON: %w", err)
 	}
 
@@ -60,12 +62,12 @@ func upgradeTapFormula(distro *packageDistro) error {
 	}
 
 	params := templateParams{
-		Name:        formulaInfo.Name,
-		Description: formulaInfo.Description,
-		Homepage:    formulaInfo.Homepage,
+		Name:        info.Name,
+		Description: info.Description,
+		Homepage:    info.Homepage,
 		Url:         distro.TarBall,
 		Sha256:      hashes.Sha256,
-		License:     formulaInfo.License,
+		License:     info.License,
 	}
 	var buffer bytes.Buffer
 	if err = tmpl.Execute(&buffer, params); err != nil {

@@ -1,7 +1,10 @@
 package upgrade_node_package
 
+import "log"
+
 func Task(info PackageInfo) error {
-	distro, err := loadPackageDistro(info)
+	log.Printf("Upgrading %s/%s", info.Org, info.Name)
+	distro, err := getPackageDistro(info)
 	if err != nil {
 		return err
 	}
